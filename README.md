@@ -1,0 +1,1 @@
+a dependency-free template that gives a folder of single-file html explainers a quartz-style shell (sidebar, search, link graph, table of contents) via `python3 build.py`, with usage in `GUIDE.md`. the layout and palette are modelled on [quartz](https://github.com/jackyzha0/quartz)'s default theme; code is mit and the bundled fonts are ofl (see `fonts/licenses/`).

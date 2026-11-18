@@ -1,0 +1,349 @@
+/* Quartz-style shell for visual explainers. Injected by sumi/build.py — edit here, then rebuild.
+   Palette and proportions follow Quartz v4's default light theme. Fonts are bundled in fonts/
+   (open-licensed, from Google Fonts): Hanken Grotesk stands in for MIT Admissions' Messina Sans. */
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(fonts/hanken-grotesk-italic-100-900.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(fonts/hanken-grotesk-normal-100-900.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: italic;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url(fonts/jetbrains-mono-italic-100-800.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url(fonts/jetbrains-mono-normal-100-800.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+:root {
+  --q-light: #faf8f8;
+  --q-lightgray: #e5e5e5;
+  --q-gray: #b8b8b8;
+  --q-darkgray: #4e4e4e;
+  --q-dark: #2b2b2b;
+  --q-secondary: #284b63;
+  --q-tertiary: #84a59d;
+  --q-highlight: rgba(143, 159, 169, 0.15);
+  --q-head: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --q-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --q-code: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --q-side: 300px;
+
+  /* Re-skin the page's own palette variables so cards/buttons pick up Quartz colours. */
+  --bg: var(--q-light) !important;
+  --text: var(--q-dark) !important;
+  --ink: var(--q-dark) !important;
+  --text-muted: var(--q-darkgray) !important;
+  --muted: var(--q-darkgray) !important;
+  --border: var(--q-lightgray) !important;
+  --accent: var(--q-secondary) !important;
+  --accent-text: var(--q-secondary) !important;
+  --accent-soft: #edf1f4 !important;
+}
+
+html, body { background: var(--q-light) !important; }
+body { margin: 0 !important; color: var(--q-dark); font-family: var(--q-body); display: block !important; }
+/* Some pages pad <body> itself; keep only bottom padding (it reserves room for fixed ask-bars). */
+body { padding-top: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+
+#q-root {
+  display: grid;
+  grid-template-columns: var(--q-side) minmax(0, 1fr) var(--q-side);
+  max-width: 1600px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ---------- sidebars ---------- */
+/* Page stylesheets style bare h3/button/ul/a; neutralise them inside the shell. */
+#q-left *, #q-right *, #q-below .q-panel *, #q-search *, #q-graph-overlay * { text-transform: none; letter-spacing: normal; }
+#q-left button, #q-right button, #q-below .q-panel button, #q-root .q-graph-global { all: unset; box-sizing: border-box; cursor: pointer; }
+#q-search input { all: unset; box-sizing: border-box; }
+#q-left, #q-right {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-family: var(--q-body);
+  color: var(--q-darkgray);
+  scrollbar-width: thin;
+}
+#q-root #q-left > *, #q-root #q-right > * { flex-shrink: 0; }  /* beats the button reset below */
+#q-left { padding: 3rem 2rem 2rem 2.5rem; }
+#q-right { padding: 3rem 2.5rem 2rem 2rem; }
+
+#q-root .q-site { margin: 0; font: 700 1.6rem/1.2 var(--q-head); letter-spacing: -0.01em; }
+#q-root .q-site a { color: var(--q-dark); text-decoration: none; }
+
+#q-root .q-search-btn {
+  display: flex; align-items: center; gap: 0.5rem; width: 100%;
+  height: 2.4rem; padding: 0 0.75rem; box-sizing: border-box;
+  border: 1px solid var(--q-lightgray); border-radius: 7px;
+  background: var(--q-light); color: var(--q-darkgray);
+  font: 400 0.95rem var(--q-body); cursor: pointer; text-align: left;
+}
+#q-root .q-search-btn:hover { border-color: var(--q-gray); }
+#q-root .q-search-btn span { flex: 1; }
+#q-root .q-search-btn kbd { font: 0.75rem var(--q-code); color: var(--q-gray); }
+
+#q-root .q-section-btn {
+  display: flex; align-items: center; justify-content: space-between; width: 100%;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: 600 1rem var(--q-head); color: var(--q-dark);
+}
+#q-root .q-section-btn svg { transition: transform 0.2s ease; flex: none; }
+#q-root .q-collapsed > .q-section-btn svg { transform: rotate(-90deg); }
+#q-root .q-collapsed > :not(.q-section-btn) { display: none; }
+#q-root .q-section-btn + * { margin-top: 0.6rem; }
+
+#q-root .q-toc ul, #q-root .q-backlinks ul { list-style: none; margin: 0; padding: 0; }
+#q-root .q-backlinks a {
+  display: block; padding: 0.12rem 0 0.12rem 0.5rem;
+  font-size: 0.92rem; line-height: 1.4; color: var(--q-darkgray); text-decoration: none;
+}
+#q-root .q-backlinks a:hover { color: var(--q-tertiary); }
+
+/* ---------- margin doodles (laid out by quartz.js) ---------- */
+.q-doodles { position: fixed; z-index: 1; overflow: hidden; pointer-events: none; display: none; }
+.q-doodles.q-on { display: block; }
+/* Fade the top edge so a doodle scrolling under the panels above dissolves instead of being sliced. */
+.q-doodles { -webkit-mask-image: linear-gradient(transparent, #000 48px); mask-image: linear-gradient(transparent, #000 48px); }
+.q-doodle-track { position: absolute; top: 0; left: 0; right: 0; will-change: transform; }
+.q-doodle {
+  position: absolute; display: inline-block; line-height: 0; pointer-events: auto;
+  color: var(--q-darkgray); opacity: 0.7; transform: rotate(var(--rot, 0deg)); transition: opacity 0.2s ease;
+}
+.q-doodle:hover { opacity: 1; }
+.q-doodle .doodle-svg { display: block; height: auto; overflow: visible; }
+/* Each path has pathLength="1" and its own --dur/--delay, so hover replays the original stroke order. */
+.q-doodle path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.q-doodle:hover path { animation: q-redraw var(--dur) linear var(--delay) both; }
+@keyframes q-redraw {
+  0% { opacity: 0; stroke-dashoffset: 1; }
+  1% { opacity: 1; stroke-dashoffset: 1; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .q-doodle:hover path { animation: none; } }
+
+/* ---------- graph ---------- */
+#q-root .q-graph-box {
+  position: relative; height: 250px;
+  border: 1px solid var(--q-lightgray); border-radius: 5px; overflow: hidden; background: var(--q-light);
+}
+#q-root .q-graph-box svg { display: block; width: 100%; height: 100%; cursor: grab; }
+#q-root .q-graph-global {
+  position: absolute; top: 6px; right: 6px; z-index: 2;
+  background: none; border: 0; padding: 4px; cursor: pointer; color: var(--q-darkgray); border-radius: 4px;
+}
+#q-root .q-graph-global:hover { background: var(--q-highlight); }
+#q-root .q-node { cursor: pointer; transition: opacity 0.2s; }
+#q-root .q-node circle { fill: var(--q-gray); }
+#q-root .q-node.q-tagnode circle { fill: var(--q-tertiary); }
+#q-root .q-node.q-me circle { fill: var(--q-secondary); }
+#q-root .q-node text { font: 400 7px var(--q-body); fill: var(--q-darkgray); text-anchor: middle; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+#q-root .q-node.q-me text, #q-root .q-node.q-tagnode text, #q-root .q-node.q-hover text { opacity: 1; }
+#q-root .q-edges line { stroke: var(--q-lightgray); stroke-width: 1; transition: stroke 0.2s; }
+#q-root .q-edges line.q-hot { stroke: var(--q-gray); }
+#q-root .q-dim { opacity: 0.25; }
+
+#q-graph-overlay {
+  position: fixed; inset: 0; z-index: 1000; display: none;
+  background: rgba(250, 248, 248, 0.6); backdrop-filter: blur(4px);
+}
+#q-graph-overlay.q-open { display: block; }
+#q-graph-overlay .q-graph-box {
+  position: absolute; inset: 6vh 6vw; height: auto; background: var(--q-light);
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- TOC ---------- */
+#q-root .q-toc li a {
+  display: block; padding: 0.15rem 0; font-size: 0.92rem; line-height: 1.35;
+  color: var(--q-gray); text-decoration: none; transition: color 0.2s;
+}
+#q-root .q-toc li.q-l2 a { padding-left: 1rem; }
+#q-root .q-toc li a.q-inview { color: var(--q-dark); }
+#q-root .q-toc li a:hover { color: var(--q-tertiary); }
+#q-root .q-empty { font-size: 0.92rem; color: var(--q-gray); margin-bottom: 0; }
+
+/* ---------- centre column ---------- */
+#q-center { min-width: 0; padding: 3rem 2.5rem 4rem; box-sizing: border-box; }
+#q-root .q-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.92rem; margin-bottom: 1.2rem; }
+#q-root .q-crumbs a { color: var(--q-secondary); text-decoration: none; }
+#q-root .q-crumbs a:hover { color: var(--q-tertiary); }
+#q-root .q-crumbs .q-sep { color: var(--q-gray); }
+#q-root .q-crumbs .q-here { color: var(--q-darkgray); }
+
+#q-article { font-family: var(--q-body); color: var(--q-dark); line-height: 1.6; }
+#q-article h1, #q-article h2, #q-article h3, #q-article h4 { font-family: var(--q-head); color: var(--q-dark); }
+#q-article code, #q-article pre, #q-article kbd, #q-article samp { font-family: var(--q-code); }
+
+/* Code, Quartz-style: bordered block with a hover copy button; inline code as a soft pill. */
+#q-article pre.q-pre {
+  position: relative; overflow-x: auto;
+  background: #fff !important; color: var(--q-dark) !important;
+  border: 1px solid var(--q-lightgray) !important; border-radius: 7px !important;
+  padding: 0.85rem 1rem !important; margin: 1rem 0 !important;
+  font-size: 0.85rem !important; line-height: 1.6 !important; white-space: pre;
+}
+#q-article pre.q-pre code { background: none !important; padding: 0 !important; border: 0 !important; font-size: inherit !important; color: inherit; }
+#q-article :not(pre) > code {
+  background: var(--q-highlight) !important; color: var(--q-dark) !important; border: 0 !important;
+  border-radius: 5px !important; padding: 0.1rem 0.3rem !important; font-size: 0.88em !important;
+}
+#q-article .q-copy {
+  position: absolute; top: 0.45rem; right: 0.45rem;
+  font: 500 0.72rem var(--q-body) !important; color: var(--q-darkgray);
+  background: var(--q-light); border: 1px solid var(--q-lightgray); border-radius: 5px;
+  padding: 0.2rem 0.5rem; cursor: pointer; opacity: 0; transition: opacity 0.15s;
+}
+#q-article pre.q-pre:hover .q-copy { opacity: 1; }
+#q-article .q-copy:hover { color: var(--q-secondary); border-color: var(--q-gray); }
+/* Typing practice: idle blocks read as normal highlighted code; clicked blocks show untyped text
+   in gray with a caret, correct chars in colour, wrong ones in red. */
+#q-article pre.q-practice { cursor: text; outline: 1.5px dashed transparent; outline-offset: -1px; transition: outline-color 0.15s; }
+#q-article pre.q-practice:hover { outline-color: var(--q-gray); }
+#q-article pre.q-practice.q-active { outline: 1.5px solid var(--q-secondary); }
+#q-article pre.q-idle::after {
+  content: 'click to practice'; position: absolute; bottom: 0.45rem; right: 0.6rem;
+  font: 500 0.68rem var(--q-body); letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--q-gray); opacity: 0; transition: opacity 0.15s; pointer-events: none;
+}
+#q-article pre.q-idle:hover::after { opacity: 1; }
+#q-article .q-ch { color: var(--q-gray); }
+#q-article .q-ch.q-ok { color: var(--q-dark); }
+#q-article .q-ch.q-ok.q-k { color: #b0413e; }
+#q-article .q-ch.q-ok.q-s { color: #2f6f4f; }
+#q-article .q-ch.q-ok.q-c { color: #8a8a8a; font-style: italic; }
+#q-article .q-ch.q-bad { color: #c62828; background: rgba(198, 40, 40, 0.14); border-radius: 2px; }
+/* Caret drawn as a background stripe: the shell strips box-shadows with !important, which would also freeze an animation. */
+#q-article .q-ch.q-caret { background: linear-gradient(var(--q-secondary), var(--q-secondary)) left / 2px 100% no-repeat; animation: q-caret 1s step-end infinite; }
+@keyframes q-caret { 50% { background-size: 0 100%; } }
+#q-article .q-ch.q-nl { color: var(--q-lightgray); }
+#q-article pre.q-idle .q-nl { display: none; }
+
+/* Hover notes: annotated lines highlight, and a popover explains the line. */
+#q-article .q-line { border-radius: 3px; transition: background 0.12s; }
+#q-article .q-line.q-hover { background: var(--q-highlight); box-shadow: -2px 0 0 var(--q-secondary) !important; }
+.q-note {
+  position: fixed; top: -1000px; left: -1000px; z-index: 200; max-width: 420px;
+  padding: 0.8rem 1rem; border: 1px solid var(--q-lightgray); border-radius: 7px; background: #fff;
+  font: 400 0.85rem/1.55 var(--q-body); color: var(--q-dark);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1); pointer-events: none;
+  opacity: 0; transform: translateY(4px); transition: opacity 0.14s, transform 0.14s;
+}
+.q-note.q-show { opacity: 1; transform: none; }
+.q-note code { font: 0.8rem var(--q-code); background: var(--q-highlight); padding: 0.05rem 0.3rem; border-radius: 4px; }
+
+/* Glossary terms: every use is underlined and shows its definition (a .q-note popover) on hover. */
+#q-article .q-term { border-bottom: 1px dotted var(--q-secondary); cursor: help; }
+#q-article .q-term:hover { background: var(--q-highlight); border-radius: 3px; }
+#q-article table.q-gloss { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+#q-article table.q-gloss td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--q-lightgray); vertical-align: top; }
+#q-article table.q-gloss td:first-child { white-space: nowrap; width: 1%; }
+
+#q-article button, #q-article input, #q-article select, #q-article textarea { font-family: inherit; }
+#q-article ::selection { background: #fff23688; }
+#q-article *:not(svg):not(svg *) { box-shadow: none !important; }
+
+/* The page's own hero header becomes a Quartz article header: left-aligned, plain. */
+#q-article header { text-align: left !important; margin-bottom: 2rem !important; padding: 0 !important; background: none !important; border: 0 !important; }
+#q-article header h1 { font-size: 2.1rem !important; line-height: 1.15 !important; margin: 0 0 0.4rem !important; letter-spacing: -0.015em; font-weight: 800 !important; }
+#q-article header p { margin-left: 0 !important; margin-right: 0 !important; max-width: none !important; }
+#q-article header .eyebrow { display: none; }
+#q-article header .chips, #q-article header .controls, #q-article nav.jumps { justify-content: flex-start !important; }
+#q-root .q-meta { margin: 0 0 0.5rem; color: var(--q-darkgray); font-size: 0.92rem; }
+#q-root .q-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; list-style: none; padding: 0; margin: 0 0 1rem; }
+#q-root .q-tags a {
+  display: inline-block; padding: 0.15rem 0.5rem; border-radius: 8px;
+  background: var(--q-highlight); color: var(--q-secondary); font-size: 0.85rem; text-decoration: none; cursor: pointer;
+}
+#q-root .q-tags a:hover { color: var(--q-tertiary); }
+
+#q-below { display: none; }
+#q-root .q-footer { margin-top: 4rem; padding-top: 1rem; border-top: 1px solid var(--q-lightgray); font-size: 0.85rem; color: var(--q-gray); }
+#q-root .q-footer a { color: var(--q-secondary); text-decoration: none; }
+
+/* ---------- search ---------- */
+#q-search {
+  position: fixed; inset: 0; z-index: 1001; display: none;
+  background: rgba(43, 43, 43, 0.12); backdrop-filter: blur(4px);
+}
+#q-search.q-open { display: block; }
+#q-root .q-search-panel { width: min(720px, 92vw); margin: 12vh auto 0; font-family: var(--q-body); }
+#q-root .q-search-panel input {
+  width: 100%; box-sizing: border-box; padding: 0.9rem 1.1rem;
+  font: 400 1.15rem var(--q-body); color: var(--q-dark);
+  border: 1px solid var(--q-lightgray); border-radius: 7px; background: var(--q-light); outline: none;
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.12);
+}
+#q-root .q-results {
+  margin-top: 0.6rem; max-height: 62vh; overflow-y: auto;
+  background: var(--q-light); border: 1px solid var(--q-lightgray); border-radius: 7px;
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.12);
+}
+#q-root .q-results:empty { display: none; }
+#q-root .q-result { display: block; padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--q-lightgray); text-decoration: none; color: var(--q-dark); }
+#q-root .q-result:last-child { border-bottom: 0; }
+#q-root .q-result.q-sel, #q-root .q-result:hover { background: var(--q-highlight); }
+#q-root .q-result .q-rt { font: 600 1rem var(--q-head); }
+#q-root .q-result .q-rb { font-size: 0.88rem; color: var(--q-darkgray); margin-top: 0.15rem; }
+#q-root .q-result .q-rtag { display: inline-block; margin-top: 0.35rem; font-size: 0.75rem; padding: 0.05rem 0.45rem; border-radius: 8px; background: var(--q-highlight); color: var(--q-secondary); }
+#q-root .q-result mark { background: #fff23688; color: inherit; border-radius: 2px; }
+#q-root .q-noresult { padding: 0.9rem 1.1rem; color: var(--q-darkgray); font-size: 0.92rem; }
+
+/* ---------- small windows ---------- */
+#q-article [data-q-wide] { max-width: 100% !important; overflow-x: auto !important; }
+#q-article img, #q-article video { max-width: 100%; height: auto; }
+#q-article [id] { scroll-margin-top: 1rem; }
+
+/* Tablet: right sidebar drops below the article (Quartz does the same), left sidebar slims down. */
+@media (max-width: 1200px) {
+  :root { --q-side: 250px; }
+  #q-root { grid-template-columns: var(--q-side) minmax(0, 1fr); }
+  #q-left { padding: 2.5rem 1.25rem 2rem 1.75rem; }
+  #q-right { display: none; }
+  #q-below { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
+  #q-center { padding: 2.5rem 1.75rem 4rem; }
+}
+
+/* Phone: sidebar becomes a sticky top bar: title and search icon. */
+@media (max-width: 800px) {
+  #q-root { display: block; }
+  #q-left {
+    position: sticky; top: 0; z-index: 50; height: auto; max-height: 100vh;
+    flex-direction: row; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1rem; background: rgba(250, 248, 248, 0.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--q-lightgray);
+  }
+  #q-root .q-site { flex: 1; font-size: 1.15rem; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #q-root .q-search-btn { width: 2.3rem; height: 2.3rem; padding: 0; justify-content: center; }
+  #q-root .q-search-btn span, #q-root .q-search-btn kbd { display: none; }
+  #q-center { padding: 1.25rem 1rem 3rem; }
+  #q-article header h1 { font-size: 1.6rem !important; }
+  #q-article [id] { scroll-margin-top: 4.5rem; }
+  #q-below { grid-template-columns: 1fr; }
+  #q-root .q-graph-box { height: 220px; }
+}

@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Visual Explainers — Index</title>
+<style>
+  :root {
+    --bg: #faf8f4;
+    --ink: #1a1814;
+    --muted: #6b6358;
+    --rule: #e5dfd3;
+    --card: #ffffff;
+    --accent: #b8442a;
+    --accent-soft: #f4ebe1;
+    --shadow: 0 1px 2px rgba(20, 18, 14, 0.04), 0 4px 14px rgba(20, 18, 14, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14110d;
+      --ink: #f1ece2;
+      --muted: #9a9085;
+      --rule: #2a251e;
+      --card: #1c1812;
+      --accent: #e07a5f;
+      --accent-soft: #2a1e16;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.5);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 64px 28px 96px;
+  }
+  header { margin-bottom: 36px; }
+  h1 {
+    font-size: clamp(34px, 5vw, 48px);
+    margin: 0 0 8px;
+    letter-spacing: -0.015em;
+    font-weight: 600;
+  }
+  .tagline {
+    color: var(--muted);
+    font-size: 17px;
+    margin: 0;
+  }
+  .search {
+    margin: 28px 0 8px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    padding: 16px 18px 16px 46px;
+    font-size: 17px;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    outline: none;
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s ease;
+  }
+  .search input:focus { border-color: var(--accent); }
+  .search svg {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .count {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 12px 2px 24px;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  .card {
+    display: block;
+    padding: 20px 22px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--shadow);
+    transition: transform 0.12s ease, border-color 0.12s ease;
+  }
+  .card:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+  }
+  .card[hidden] { display: none; }
+  .card-title {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+    line-height: 1.3;
+  }
+  .card-blurb {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+  .card-meta {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 11px;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  mark {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .sortbtn {
+    font: inherit;
+    color: var(--accent);
+    background: none;
+    border: none;
+    border-bottom: 1px dotted var(--accent);
+    padding: 0;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Visual Explainers</h1>
+    <p class="tagline">A small library of interactive walkthroughs. Search by title, topic, or keyword.</p>
+  </header>
+
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input id="q" type="search" placeholder="Search explainers…" autofocus autocomplete="off" />
+  </div>
+  <div class="count" id="count"></div>
+
+  <!--
+    Cards are maintained by the /html skill. To add one, insert a new <a class="card">
+    block immediately ABOVE the "insert-here" marker at the bottom of this grid.
+    Keep the exact structure: title, blurb, then a .card-meta row with one <span class="tag">
+    and the filename. data-tags feeds the search index (space-separated keywords).
+  -->
+  <div class="grid" id="grid">
+
+    <a class="card" href="example.html" data-tags="example starter">
+      <div class="card-title">Example Page</div>
+      <p class="card-blurb">Replace this card with your own; one card per page.</p>
+      <div class="card-meta"><span class="tag">Example</span><span>example.html</span></div>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- @html-skill:insert-here — the /html skill appends new cards immediately above this line -->
+  </div>
+
+  <div class="empty" id="empty" hidden>No explainers match that search.</div>
+
+  <footer>
+    <span id="total"></span> · sorted by <button class="sortbtn" id="sortbtn" title="Toggle between most recently edited and topic order">most recent</button> · <kbd>/</kbd> to search
+  </footer>
+</div>
+
+<script>
+  const q = document.getElementById('q');
+  const grid = document.getElementById('grid');
+  const cards = Array.from(grid.querySelectorAll('.card'));
+  const empty = document.getElementById('empty');
+  const count = document.getElementById('count');
+  const total = document.getElementById('total');
+  total.textContent = cards.length + ' explainers';
+
+  function norm(s) { return s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, ''); }
+
+  const index = cards.map(c => ({
+    el: c,
+    title: c.querySelector('.card-title'),
+    blurb: c.querySelector('.card-blurb'),
+    titleText: c.querySelector('.card-title').textContent,
+    blurbText: c.querySelector('.card-blurb').textContent,
+    haystack: norm(c.querySelector('.card-title').textContent + ' ' + c.querySelector('.card-blurb').textContent + ' ' + (c.dataset.tags || ''))
+  }));
+
+  function highlight(text, terms) {
+    if (!terms.length) return text;
+    const safe = text.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const pattern = new RegExp('(' + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+    return safe.replace(pattern, '<mark>$1</mark>');
+  }
+
+  function update() {
+    const raw = q.value.trim();
+    const terms = norm(raw).split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const item of index) {
+      const match = terms.every(t => item.haystack.includes(t));
+      item.el.hidden = !match;
+      if (match) {
+        shown++;
+        item.title.innerHTML = highlight(item.titleText, terms);
+        item.blurb.innerHTML = highlight(item.blurbText, terms);
+      }
+    }
+    empty.hidden = shown !== 0;
+    count.textContent = raw ? `${shown} of ${cards.length} match "${raw}"` : '';
+  }
+
+  q.addEventListener('input', update);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== q) {
+      e.preventDefault();
+      q.focus();
+      q.select();
+    }
+    if (e.key === 'Escape' && document.activeElement === q) {
+      q.value = '';
+      update();
+      q.blur();
+    }
+  });
+  /* Sort order. Cards are written in topic order in this file (and new ones are appended at
+     the marker by the /html skill), but the default view is "most recently edited first".
+     Edit times come from quartz-data.js, which build.py generates from file mtimes, because
+     a page opened over file:// can't read mtimes itself. That script loads *after* this one,
+     so the sort waits for DOMContentLoaded. Cards with no manifest entry (e.g. pages in
+     subfolders like html-effectiveness/) have no time; they sink to the end in topic order.
+     The toggle goes back to the hand-written topic order, which is kept in `cards`. */
+  const sortbtn = document.getElementById('sortbtn');
+  let byRecent = true;
+  function applySort() {
+    const pages = (window.QUARTZ && window.QUARTZ.pages) || [];
+    const mtime = Object.fromEntries(pages.map(p => [p.file, p.mtime || 0]));
+    const order = byRecent
+      ? cards.slice().sort((a, b) => (mtime[b.getAttribute('href')] || 0) - (mtime[a.getAttribute('href')] || 0))
+      : cards;
+    // appendChild moves an existing node, so this reorders in place; event handlers and
+    // search state are untouched. Array.sort is stable, so ties keep topic order.
+    for (const c of order) grid.appendChild(c);
+    sortbtn.textContent = byRecent ? 'most recent' : 'topic';
+  }
+  sortbtn.addEventListener('click', () => { byRecent = !byRecent; applySort(); });
+  document.addEventListener('DOMContentLoaded', applySort);
+</script>
+</body>
+</html>

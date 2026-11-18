@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- Starter page: header + h2 sections + id'd collapsible cards is the structure the Quartz shell
+     wraps (title block, table of contents). Kept over 2000 bytes because build.py skips smaller files. -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Example Page</title>
+<style>
+  body { font-family: system-ui, sans-serif; color: var(--text); background: var(--bg); }
+  /* Collapsible card: collapsed by default, the head row toggles it (click-driven, never auto-opening). */
+  .card { border: 1px solid var(--border); border-radius: 8px; margin: 1rem 0; background: #fff; }
+  .card-head { padding: .75rem 1rem; cursor: pointer; font-weight: 600; }
+  .card-body { display: none; padding: 0 1rem 1rem; color: var(--muted); }
+  .card.open .card-body { display: block; }
+  .badge { background: var(--accent-soft); color: var(--accent); padding: 0 .4em; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Example Page</h1>
+  <p>A minimal page showing the structure the Quartz shell expects. Replace it with a real explainer.</p>
+</header>
+
+<section id="words"><h2>Words used on this page</h2></section>
+
+<h2>A plain section</h2>
+<p>Body text sits in an ~850px column; the sidebars take the rest of the window. Inline code looks like
+<code>python3 ~/sumi/build.py --all</code>, and a <span class="badge">badge</span> uses the accent colours.</p>
+
+<pre>python3 ~/sumi/build.py --all   # rerun after adding or editing any page</pre>
+
+<h2>Code you're explaining</h2>
+<p>Hover a line for its note. Click the block to retype it from memory; drag to select and copy as usual.</p>
+<pre data-note-key="greet"><code>def greet(name)
+  "Hello, #{name}"
+end</code></pre>
+
+<h2>Collapsible cards</h2>
+<div class="card" id="first-card">
+  <div class="card-head">First card: click to expand</div>
+  <div class="card-body">Long content goes in cards like this one, collapsed until the reader asks for it.</div>
+</div>
+<div class="card" id="second-card">
+  <div class="card-head">Second card</div>
+  <div class="card-body">Each card's id makes it a table-of-contents entry in the right sidebar.</div>
+</div>
+
+<script>
+  // Jargon used on the page: every use is underlined with a hover definition, and #words lists them all.
+  const GLOSSARY = [
+    { term: 'Shell', match: ['shell'], def: 'The shared template script and stylesheet that wrap every page.' },
+  ];
+
+  // Per-line hover notes for <pre data-note-key="...">, keyed by 0-indexed line. The shell reads this global.
+  const LINE_NOTES_BY_KEY = {
+    greet: {
+      0: '<strong>Syntax:</strong> <code>def</code> defines a method.<br><strong>Meaning:</strong> <code>greet</code> takes one argument.',
+      1: '<strong>Syntax:</strong> <code>#{}</code> interpolates inside a double-quoted string.<br><strong>Meaning:</strong> The last expression is the return value.',
+    },
+  };
+
+  // One delegated listener instead of one per card, so cards added later work without extra wiring.
+  document.addEventListener('click', e => {
+    const head = e.target.closest('.card-head');
+    if (head) head.parentElement.classList.toggle('open');
+  });
+</script>
+</body>
+</html>
